@@ -1,7 +1,14 @@
 import { fetchImages } from 'components/API/API';
+import { Button } from 'components/Button/Button';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import React, { Component } from 'react';
+import {
+  StartTitle,
+  SecondTitle,
+  GalleryList,
+  ToStartBtn,
+} from './ImageGallery.styled';
 
 export class ImageGallery extends Component {
   state = {
@@ -9,8 +16,6 @@ export class ImageGallery extends Component {
     page: 1,
     status: 'idle',
   };
-
-  search = () => {};
 
   addMore = () => {
     this.setState(prevState => {
@@ -27,7 +32,6 @@ export class ImageGallery extends Component {
       this.setState({ status: 'pending' });
       await fetchImages(this.props.value, page).then(result => {
         const data = result.data.hits;
-        console.log(data.length);
         if (+data.length === +0 || this.props.value === '') {
           this.setState({ status: 'rejected' });
           return;
@@ -38,7 +42,6 @@ export class ImageGallery extends Component {
     }
 
     if (prevState.page !== this.state.page) {
-      console.log(this.state.page);
       await fetchImages(this.props.value, page).then(result => {
         const data = result.data.hits;
         this.setState(prevState => {
@@ -56,26 +59,26 @@ export class ImageGallery extends Component {
       return <Loader />;
     }
     if (status === 'rejected') {
-      return <h1>vse propalo</h1>;
+      return <SecondTitle>Enter a valid query name!!!</SecondTitle>;
     }
     if (status === 'resolved') {
       return (
-        <ul class="gallery">
-          {data.map(item => (
-            <ImageGalleryItem key={item.id} item={item} />
-          ))}
-          <button type="button" onClick={this.addMore}>
-            search more
-          </button>
-        </ul>
+        <div>
+          <p id="toup"></p>
+          <GalleryList>
+            {data.map(item => (
+              <ImageGalleryItem key={item.id} item={item} />
+            ))}
+          </GalleryList>
+          <Button loadMore={this.addMore} />
+          <ToStartBtn href="#toup" type="button">
+            to start
+          </ToStartBtn>
+        </div>
       );
     }
     if (status === 'idle') {
-      return (
-        <div>
-          <p>zaebalo nahuy</p>
-        </div>
-      );
+      return <StartTitle>Enter the name of the picture or photo!!!</StartTitle>;
     }
   }
 }

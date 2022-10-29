@@ -1,9 +1,12 @@
-export const Modal = () => {
+import { ModalBox, ModalWrapper } from './Modal.styled';
+
+export const Modal = ({ item, close }) => {
   return (
-    <div class="overlay">
-      <div class="modal">
-        <img src="" alt="" />
-      </div>
-    </div>
+    <ModalWrapper>
+      <ModalBox>
+        <button onClick={close}>close</button>
+        <img src={item.largeImageUR} alt={item.user} />
+      </ModalBox>
+    </ModalWrapper>
   );
 };
