@@ -1,12 +1,22 @@
-import { ModalBox, ModalWrapper } from './Modal.styled';
+import PropTypes from 'prop-types';
+import { ModalBox, ModalWrapper, ModalCloseBtn } from './Modal.styled';
+import { createPortal } from 'react-dom';
 
-export const Modal = ({ item, close }) => {
-  return (
+export const Modal = ({ item, onClose }) => {
+  return createPortal(
     <ModalWrapper>
       <ModalBox>
-        <button onClick={close}>close</button>
-        <img src={item.largeImageUR} alt={item.user} />
+        <ModalCloseBtn type="button" onClick={onClose}>
+          X
+        </ModalCloseBtn>
+        <img src={item.largeImageURL} alt={item.user} />
       </ModalBox>
-    </ModalWrapper>
+    </ModalWrapper>,
+    document.querySelector('#modal-root')
+    // );
   );
+};
+Modal.propTypes = {
+  item: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

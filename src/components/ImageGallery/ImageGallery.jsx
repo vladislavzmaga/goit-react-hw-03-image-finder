@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { fetchImages } from 'components/API/API';
 import { Button } from 'components/Button/Button';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
@@ -15,6 +16,7 @@ export class ImageGallery extends Component {
     data: null,
     page: 1,
     status: 'idle',
+    error: null,
   };
 
   addMore = () => {
@@ -63,8 +65,7 @@ export class ImageGallery extends Component {
     }
     if (status === 'resolved') {
       return (
-        <div>
-          <p id="toup"></p>
+        <div id="toup">
           <GalleryList>
             {data.map(item => (
               <ImageGalleryItem key={item.id} item={item} />
@@ -82,3 +83,7 @@ export class ImageGallery extends Component {
     }
   }
 }
+
+ImageGallery.propTypes = {
+  value: PropTypes.string.isRequired,
+};
