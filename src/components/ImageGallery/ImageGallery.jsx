@@ -31,7 +31,7 @@ export class ImageGallery extends Component {
     const { page } = this.state;
 
     if (prevProps.value !== this.props.value) {
-      this.setState({ status: 'pending' });
+      this.setState({ status: 'pending', page: 1 });
       await fetchImages(this.props.value, page).then(result => {
         const data = result.data.hits;
         if (+data.length === +0 || this.props.value === '') {
@@ -71,7 +71,7 @@ export class ImageGallery extends Component {
               <ImageGalleryItem key={item.id} item={item} />
             ))}
           </GalleryList>
-          <Button loadMore={this.addMore} />
+          {data && <Button loadMore={this.addMore} />}
           <ToStartBtn href="#toup" type="button">
             to start
           </ToStartBtn>
