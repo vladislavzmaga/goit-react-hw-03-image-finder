@@ -45,11 +45,16 @@ export class ImageGallery extends Component {
         }
 
         this.setState({ data: respounse, status: 'resolved', page: 1 });
-        console.clear();
+        // console.clear();
       });
+      this.setState({ page: 1 });
+    }
+    if (page === 1) {
+      return;
     }
 
     if (prevState.page !== page) {
+      console.log(page);
       await fetchImages(value, page, perPage).then(result => {
         const data = result.data.hits;
         this.setState(prevState => {
@@ -57,10 +62,10 @@ export class ImageGallery extends Component {
             data: [...prevState.data, ...data],
           };
         });
-        console.clear();
+        // console.clear();
       });
     }
-    console.clear();
+    // console.clear();
   }
 
   render() {
