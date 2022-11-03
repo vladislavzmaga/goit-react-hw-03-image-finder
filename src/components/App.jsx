@@ -8,7 +8,7 @@ export class App extends Component {
   };
 
   handleSubmit = value => {
-    this.setState({ value: value });
+    this.setState({ value });
   };
 
   render() {

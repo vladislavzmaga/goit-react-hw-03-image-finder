@@ -13,10 +13,10 @@ import {
 
 export class ImageGallery extends Component {
   state = {
-    data: null,
+    data: [],
     page: 1,
+    perPage: 12,
     status: 'idle',
-    error: null,
   };
 
   addMore = () => {
@@ -28,23 +28,32 @@ export class ImageGallery extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { page } = this.state;
+    const { page, perPage } = this.state;
+    const { value } = this.props;
+    // console.log(prevProps.value);
+    // console.log(this.props.value);
 
-    if (prevProps.value !== this.props.value) {
-      this.setState({ status: 'pending', page: 1 });
-      await fetchImages(this.props.value, page).then(result => {
-        const data = result.data.hits;
-        if (+data.length === +0 || this.props.value === '') {
+    if (prevProps.value !== value) {
+      this.setState({
+        data: [],
+        page: 1,
+        status: 'pending',
+      });
+      console.log(page);
+      await fetchImages(value, page, perPage).then(result => {
+        const respounse = result.data.hits;
+        if (+respounse.length === +0 || value === '') {
           this.setState({ status: 'rejected' });
           return;
         }
 
-        this.setState({ data, status: 'resolved' });
+        this.setState({ data: respounse, status: 'resolved' });
       });
     }
 
-    if (prevState.page !== this.state.page) {
-      await fetchImages(this.props.value, page).then(result => {
+    if (prevState.page !== page) {
+      console.log(page);
+      await fetchImages(value, page, perPage).then(result => {
         const data = result.data.hits;
         this.setState(prevState => {
           return {
@@ -56,7 +65,7 @@ export class ImageGallery extends Component {
   }
 
   render() {
-    const { data, status } = this.state;
+    const { data, status, perPage } = this.state;
     if (status === 'pending') {
       return <Loader />;
     }
@@ -71,10 +80,13 @@ export class ImageGallery extends Component {
               <ImageGalleryItem key={item.id} item={item} />
             ))}
           </GalleryList>
-          {data && <Button loadMore={this.addMore} />}
-          <ToStartBtn href="#toup" type="button">
-            to start
-          </ToStartBtn>
+
+          {data.length >= perPage && <Button loadMore={this.addMore} />}
+          {data.length > perPage && (
+            <ToStartBtn href="#toup" type="button">
+              to start
+            </ToStartBtn>
+          )}
         </div>
       );
     }
