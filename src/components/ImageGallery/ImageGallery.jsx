@@ -15,6 +15,7 @@ export class ImageGallery extends Component {
   state = {
     data: [],
     page: 1,
+    startPage: 1,
     perPage: 12,
     status: 'idle',
   };
@@ -28,31 +29,27 @@ export class ImageGallery extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { page, perPage } = this.state;
+    const { page, perPage, startPage } = this.state;
     const { value } = this.props;
-    // console.log(prevProps.value);
-    // console.log(this.props.value);
-
     if (prevProps.value !== value) {
       this.setState({
         data: [],
         page: 1,
         status: 'pending',
       });
-      console.log(page);
-      await fetchImages(value, page, perPage).then(result => {
+      await fetchImages(value, startPage, perPage).then(result => {
         const respounse = result.data.hits;
         if (+respounse.length === +0 || value === '') {
           this.setState({ status: 'rejected' });
           return;
         }
 
-        this.setState({ data: respounse, status: 'resolved' });
+        this.setState({ data: respounse, status: 'resolved', page: 1 });
+        console.clear();
       });
     }
 
     if (prevState.page !== page) {
-      console.log(page);
       await fetchImages(value, page, perPage).then(result => {
         const data = result.data.hits;
         this.setState(prevState => {
@@ -60,8 +57,10 @@ export class ImageGallery extends Component {
             data: [...prevState.data, ...data],
           };
         });
+        console.clear();
       });
     }
+    console.clear();
   }
 
   render() {
