@@ -5,17 +5,18 @@ import { SearchBar } from './Searchbar/Searchbar';
 export class App extends Component {
   state = {
     value: '',
+    page: 1,
   };
 
-  handleSubmit = value => {
-    this.setState({ value });
+  handleSubmit = (value, page) => {
+    this.setState({ value, page });
   };
 
   render() {
     return (
       <div>
         <SearchBar onSubmit={this.handleSubmit} />
-        <ImageGallery value={this.state.value} />
+        <ImageGallery value={this.state.value} page={this.state.page} />
       </div>
     );
   }

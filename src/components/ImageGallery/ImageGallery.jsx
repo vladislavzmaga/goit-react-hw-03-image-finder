@@ -14,8 +14,7 @@ import {
 export class ImageGallery extends Component {
   state = {
     data: [],
-    page: 1,
-    startPage: 1,
+    newPage: 1,
     perPage: 12,
     status: 'idle',
   };
@@ -23,49 +22,41 @@ export class ImageGallery extends Component {
   addMore = () => {
     this.setState(prevState => {
       return {
-        page: prevState.page + 1,
+        newPage: prevState.newPage + 1,
       };
     });
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { page, perPage, startPage } = this.state;
-    const { value } = this.props;
+    const { perPage, newPage } = this.state;
+    const { value, page } = this.props;
     if (prevProps.value !== value) {
       this.setState({
         data: [],
-        page: 1,
+        newPage: page,
         status: 'pending',
       });
-      await fetchImages(value, startPage, perPage).then(result => {
+      await fetchImages(value, page, perPage).then(result => {
         const respounse = result.data.hits;
         if (+respounse.length === +0 || value === '') {
           this.setState({ status: 'rejected' });
           return;
         }
 
-        this.setState({ data: respounse, status: 'resolved', page: 1 });
-        // console.clear();
+        this.setState({ data: respounse, status: 'resolved' });
       });
-      this.setState({ page: 1 });
-    }
-    if (page === 1) {
-      return;
     }
 
-    if (prevState.page !== page) {
-      console.log(page);
-      await fetchImages(value, page, perPage).then(result => {
+    if (prevState.newPage !== newPage && newPage !== 1) {
+      await fetchImages(value, newPage, perPage).then(result => {
         const data = result.data.hits;
         this.setState(prevState => {
           return {
             data: [...prevState.data, ...data],
           };
         });
-        // console.clear();
       });
     }
-    // console.clear();
   }
 
   render() {

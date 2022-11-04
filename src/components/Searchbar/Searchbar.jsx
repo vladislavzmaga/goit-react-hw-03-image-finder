@@ -11,6 +11,7 @@ import {
 export class SearchBar extends Component {
   state = {
     value: '',
+    page: 1,
   };
 
   getInputValue = evt => {
@@ -19,15 +20,16 @@ export class SearchBar extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-
+    const page = this.state.page;
     const value = this.state.value;
-    this.props.onSubmit(value);
+    this.props.onSubmit(value, page);
     this.reset();
   };
 
   reset = () => {
     this.setState({
       value: '',
+      page: 1,
     });
   };
 
