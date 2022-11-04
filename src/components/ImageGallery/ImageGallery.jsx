@@ -42,7 +42,6 @@ export class ImageGallery extends Component {
           this.setState({ status: 'rejected' });
           return;
         }
-
         this.setState({ data: respounse, status: 'resolved' });
       });
     }
