@@ -47,6 +47,7 @@ export class ImageGallery extends Component {
     }
 
     if (prevState.newPage !== newPage && newPage !== 1) {
+      // console.log(page);
       await fetchImages(value, newPage, perPage).then(result => {
         const data = result.data.hits;
         this.setState(prevState => {
